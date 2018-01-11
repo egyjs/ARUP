@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <link rel="icon" href="">
 
-    <title>Starter Template for Bootstrap</title>
+    <title>ARUP To sharing file</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
@@ -44,7 +44,7 @@
                     <p class="card-text">Upload Any File With Unlimited Storage.</p>
 
                     <div class="progress" style="display: none;">
-                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                     <!--                    --------->
                     <input type="file" id="files" name="files[]" class="form-control" style="border-radius: 0;" required>
@@ -120,7 +120,7 @@
                         $(".progress-bar").css({
                             width: progress + "%"
                         });
-                        $("#myBar").text(progress + "%" + " Fetch the file")
+                        $(".progress-bar").text(progress + "%")
                         console.log(progress);
                     }
                 }
@@ -156,9 +156,9 @@
                                 width: Math.floor(percentComplete * 100) + "%"
                             });
                             if ((Math.floor(percentComplete * 100)) != 100) {
-                                //$("#myBar").text(Math.floor(percentComplete * 100) + "%" + " Upload progress")
+                                $(".progress-bar").text(Math.floor(percentComplete * 100) + "%" + " Upload progress")
                             } else {
-                                //$("#myBar").text(" Just a moment ")
+                                $(".progress-bar").text(" Just a moment ")
                             }
 
                             //console.log((Math.floor(percentComplete * 100) / 100)*100);
