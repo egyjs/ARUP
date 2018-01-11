@@ -1,0 +1,53 @@
+<script>
+function guesser(len) {
+  var arr = Array.apply(null, Array(len));
+  var propIndex = -1;
+  var indexes = arr.reduce(function(total, curr) {
+    propIndex++;
+    total[propIndex] = 0;
+    return total;
+  }, {});
+  var lastGuess = arr.map(function() {
+    return possible[possible.length - 1];
+  }).join("");
+  var guess = "";
+  var found = false;
+  while (guess !== lastGuess) {
+    guess = "";
+    for (var i = 0; i < propIndex; i++) {
+      // if on last char, reset to 0 and increment previous index start position
+      if (indexes[propIndex - i] >= possible.length) {
+        indexes[propIndex - i - 1]++;
+        indexes[propIndex - i] = 0;
+      }
+    }
+    for (var i in indexes) {
+      guess += possible[indexes[i]];
+    }
+
+    document.write(guess + "<br/>");
+    if (guess === password) {
+      found = true;
+      break;
+    }
+    // increment last char
+    indexes[propIndex]++;
+  }
+  if (found) {
+    document.write("You know the secret password. Welcome.");
+  } else {
+    document.write("Sorry, you do not know the secret password.");
+  }
+}
+
+// The two lines did not work : 
+//var password = 'Elzahaby';
+//var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"; 
+
+// The lines we put are working:
+var password = 'edc';
+var possible = "abcde";
+
+// Run the function
+guesser(password.length);
+</script>
