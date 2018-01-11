@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="">
+
+    <title>delete file</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <style type="text/css">
+        body {
+            padding-top: 5rem;
+        }
+
+        .starter-template {
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
+
+    </style>
+</head>
+
+
+<body>
+    <div class="container">
+        <div class="starter-template">
+            <h1><img alt="Loading..." src="https://loading.io/spinners/coolors/lg.palette-rotating-ring-loader.gif"> </h1>
+            <p class="lead"></p>
+        </div>
+    </div>
+    <!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    <script>
+        $.urlParam = function(name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            if (results == null) {
+                return null;
+            } else {
+                return decodeURI(results[1]) || 0;
+            }
+        }
+
+
+
+
+        const repo = 'https://api.github.com/repos/';
+        const nameWithOwner = 'el3zahaby/ARUP';
+        const FileUrlWeb = repo + nameWithOwner + '/contents/web';
+        const FileUrlUp = repo + nameWithOwner + '/contents/up';
+        const FileUrlTest = repo + nameWithOwner + '/contents/test';
+
+        const DBFile = $.ajax({
+            type: 'GET',
+            url: FileUrlTest,
+            async: false
+        }).responseJSON;
+
+        function getObjects(obj, key, val) {
+            var newObj = false;
+            $.each(obj, function() {
+                var testObject = this;
+                $.each(testObject, function(k, v) {
+                    //alert(k);
+                    if (val == v && k == key) {
+                        newObj = testObject;
+                    }
+                });
+            });
+
+            return newObj;
+        }
+
+        var theNfile = getObjects(DBFile, "name", $.urlParam('n'));
+
+        console.log(theNfile)
+
+        function deleteFile(sha, deleteMessage) {
+            var apiurl = theNfile._links.self;
+            var filedata = JSON.stringify({
+                "message": deleteMessage,
+                "sha": sha
+            });
+
+            $.ajax({
+                url: apiurl,
+                type: 'DELETE',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Authorization", "Basic " + btoa("el3zahaby:abu45454545"));
+                },
+                data: filedata
+            }).done(function(response) {
+                console.log(response);
+            $('h1').text('Done! The file was deleted');
+            $('.lead').html("<a href='index.html' class='btn btn-outline-primary'>Go Home</a>");
+            });
+        }
+
+
+        if (theNfile == false) {
+            $('h1').text('OPS!! there\'s no file');
+            $('.lead').html("<a href='index.html' class='btn btn-outline-primary'>Go Home</a>");
+        } else {
+            document.title = "Delete " + $.urlParam('n').substring(5, $.urlParam('n').length);
+            $('h1').text("Delete " + $.urlParam('n').substring(5, $.urlParam('n').length));
+            $('.lead').text("Are you sure you want to delete this file!?");
+            var conf = confirm("Are you sure you want to delete this file!?");
+            if(conf == true){
+                deleteFile(theNfile.sha,"Deleted file: "+ $.urlParam('n'))
+            }else{
+                location.href = "index.html";
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

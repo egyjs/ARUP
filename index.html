@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="">
+
+    <title>Starter Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <style type="text/css">
+        body {
+            padding-top: 5rem;
+        }
+
+        .starter-template {
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
+
+    </style>
+    <style>
+
+
+    </style>
+</head>
+
+
+<body>
+
+
+    <div class="container">
+        <div class="starter-template">
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                    <h2 class="card-title">ARUP</h2>
+                    <h5 class="card-subtitle mb-2 text-muted">ARUP To sharing file</h5>
+                    <p class="card-text">Upload Any File With Unlimited Storage.</p>
+
+                    <div class="progress" style="display: none;">
+                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <!--                    --------->
+                    <input type="file" id="files" name="files[]" class="form-control" style="border-radius: 0;" required>
+                    <br>
+                    <div class="container" id="resultUP" style="display: none;">
+                        <div class="row align-items-center">
+                            <div class="col-md-10">
+                                <table class="table">
+                                    <tbody id='linksT'></tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-2 bg-light">
+                                <div class="card" id="qrimg"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        const nameWithOwner = 'el3zahaby/ARUP';
+        // const token = 'YOUR_ACCESS_TOKEN';
+        const DBurl = 'https://api.github.com/repos/' + nameWithOwner + '/contents/web/db/db.json';
+
+        function makeid(l = 4) {
+            var text = "";
+            var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+            for (var i = 0; i < l; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+            return text;
+        }
+
+
+        function handleFileSelect(evt) {
+            readURL(evt.target);
+            $("input#files").css({
+                'display': 'none'
+            });
+            $(".progress").css({
+                'display': ''
+            });
+            $("#resultUP").css({
+                'display': 'block'
+            });
+
+        }
+
+        document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+        function readURL(input) {
+            var loaded = 0;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onloadend = function() {
+                    var base64result = reader.result.substr(reader.result.indexOf(',') + 1);
+                    createfile(input.files[0].name, "uploading a file", base64result)
+                }
+                reader.onprogress = function(data) {
+                    if (data.lengthComputable) {
+                        var progress = parseInt(((data.loaded / data.total) * 100), 10);
+                        $(".progress-bar").css({
+                            width: progress + "%"
+                        });
+                        $("#myBar").text(progress + "%" + " Fetch the file")
+                        console.log(progress);
+                    }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function createfile(fileName, fileMessage, fileContent) {
+            //    var filename =
+            var apiurl = "https://api.github.com/repos/" + nameWithOwner + "/contents/test/" + makeid() + '-' + fileName;
+            var filedata = JSON.stringify({
+                "message": fileMessage,
+                "content": fileContent
+            });
+
+            $.ajax({
+                url: apiurl,
+                type: 'PUT',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Authorization", "Basic " + btoa("el3zahaby:abu45454545"));
+                },
+
+
+                xhr: function() {
+                    var xhr = new window.XMLHttpRequest();
+
+                    // Upload progress
+                    xhr.upload.addEventListener("progress", function(evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = evt.loaded / evt.total;
+                            //Do something with upload progress
+                            $(".progress-bar").css({
+                                width: Math.floor(percentComplete * 100) + "%"
+                            });
+                            if ((Math.floor(percentComplete * 100)) != 100) {
+                                //$("#myBar").text(Math.floor(percentComplete * 100) + "%" + " Upload progress")
+                            } else {
+                                //$("#myBar").text(" Just a moment ")
+                            }
+
+                            //console.log((Math.floor(percentComplete * 100) / 100)*100);
+                        }
+                    }, false);
+
+                    // Download progress
+                    xhr.addEventListener("progress", function(evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = evt.loaded / evt.total;
+                            // Do something with download progress
+                            if ((Math.floor(percentComplete * 100)) == 100) {
+                                // do something
+                            }
+                            console.log(Math.floor(percentComplete * 100));
+                        }
+                    }, false);
+
+                    return xhr;
+                },
+                data: filedata
+            }).done(function(response) {
+                console.log(response);
+                $(".progress:first").remove();
+
+                $("#qrimg").html('<img class="card-img-top" src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' + encodeURI(response.content.download_url) + '" alt="QR Code">');
+
+                $('#linksT').append('<tr><th scope="row">direct link</th> <td><input readonly="readonly" class="form-control" onclick="this.select();" type="text" value="' + response.content.download_url + '"></td> </tr>');
+                var myfilename = response.content.name.substring(5, response.content.name.length);
+                var htmlcode = $("<textarea/>").text("<a href='" + response.content.download_url + "'>" + myfilename + "</a>").html();
+                $('#linksT').append('<tr><th scope="row">HTML Code</th> <td><input readonly="readonly" class="form-control" onclick="this.select();" type="text" value="' + htmlcode + '"></td> </tr>');
+                $('#linksT').append('<tr><th scope="row">Delete link</th> <td><input readonly="readonly" class="form-control" onclick="this.select();" type="text" value="' + location.href.replace(/[^/]*$/, '') + 'del.html?n=' + response.content.name + '"></td> </tr>');
+
+            });
+        }
+
+    </script>
+    <script>
+
+
+    </script>
+</body>
+
+</html>
