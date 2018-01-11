@@ -99,9 +99,8 @@
             $(".progress").css({
                 'display': ''
             });
-            $("#resultUP").css({
-                'display': 'block'
-            });
+
+
 
         }
 
@@ -184,7 +183,9 @@
             }).done(function(response) {
                 console.log(response);
                 $(".progress:first").remove();
-
+                $("#resultUP").css({
+                    'display': 'block'
+                });
                 $("#qrimg").html('<img class="card-img-top" src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' + encodeURI(response.content.download_url) + '" alt="QR Code">');
 
                 $('#linksT').append('<tr><th scope="row">direct link</th> <td><input readonly="readonly" class="form-control" onclick="this.select();" type="text" value="' + response.content.download_url + '"></td> </tr>');
