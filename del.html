@@ -65,7 +65,7 @@
 
         const DBFile = $.ajax({
             type: 'GET',
-            url: FileUrlTest,
+            url: FileUrlUp,
             async: false
         }).responseJSON;
 
@@ -121,7 +121,7 @@
             if(conf == true){
                 deleteFile(theNfile.sha,"Deleted file: "+ $.urlParam('n'))
             }else{
-                location.href = "index.html";
+                location.href = "/";
             }
         }
 
