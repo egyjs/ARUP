@@ -78,7 +78,7 @@
 
     <!-- Go to www.addthis.com/dashboard to customize your tools -->
     <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a5a1d642065848c"></script>
-    
+
     <script type="text/javascript">
         const nameWithOwner = 'el3zahaby/ARUP';
         // const token = 'YOUR_ACCESS_TOKEN';
@@ -190,12 +190,14 @@
                 $("#resultUP").css({
                     'display': 'block'
                 });
-                $("#qrimg").html('<img class="card-img-top" src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' + encodeURI(response.content.download_url) + '" alt="QR Code">');
 
-                $('#linksT').append('<tr><th scope="row">direct link</th> <td><input readonly="readonly" class="form-control" onclick="this.select();" type="text" value="' + response.content.download_url + '"></td> </tr>');
+                $("#qrimg").html('<img class="card-img-top" src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' + encodeURI(response.content.download_url) + '" alt="QR Code">');
                 var myfilename = response.content.name.substring(5, response.content.name.length);
-                var htmlcode = $("<textarea/>").text("<a href='" + response.content.download_url + "'>" + myfilename + "</a>").html();
-                $('#linksT').append('<tr><th scope="row">HTML Code</th> <td><input readonly="readonly" class="form-control" onclick="this.select();" type="text" value="' + htmlcode + '"></td> </tr>');
+                $('#linksT').append('<tr><th scope="row">direct link</th> <td><input readonly="readonly" class="form-control" onclick="this.select();" type="text" value="' + response.content.download_url + '"></td> </tr>');
+                $.post("http://v.ht/api.php?url=" + encodeURIComponent(response.content.download_url) + "&format=json", function(data) {
+                    var htmlcode = $("<textarea/>").text("<a href='" + data.shorturl + "'>" + myfilename + "</a>").html();
+                    $('#linksT').append('<tr><th scope="row">HTML Code</th> <td><input readonly="readonly" class="form-control" onclick="this.select();" type="text" value="' + htmlcode + '"></td> </tr>');
+                });
                 $('#linksT').append('<tr><th scope="row">Delete link</th> <td><input readonly="readonly" class="form-control" onclick="this.select();" type="text" value="' + location.href.replace(/[^/]*$/, '') + 'del.html?n=' + response.content.name + '"></td> </tr>');
 
             });
