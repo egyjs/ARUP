@@ -16,7 +16,7 @@
     <!-- Custom styles for this template -->
     <style type="text/css">
         body {
-            padding-top: 5rem;
+            padding-top: 0rem;
         }
 
         .starter-template {
@@ -33,13 +33,36 @@
 
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <a class="navbar-brand" href="#">ARUP</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor02">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+<!--
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Memberships</a>
+                </li>
+-->
+            </ul>
+            <form class="form-inline" action="q.html">
+                <input class="form-control mr-sm-2" type="search" name="f" placeholder="Search for a file" aria-label="Search">
+                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
 
 
-    <div class="container">
+    <div class="container-fluid">
         <div class="starter-template">
             <div class="card">
                 <div class="card-body">
-                    <h1 class="card-title">ARUP • Unlimited server to sharing files</h1>
+                    <h1 class="card-title"><img alt="ARUP" title="ARUP" src="favicon.png" height="90px"> • Unlimited server to sharing files</h1>
                     <h2 class="card-subtitle mb-2 text-muted">ARUP To sharing file</h2>
                     <p class="card-text">Upload Any File With Unlimited Storage.</p>
 
@@ -66,7 +89,7 @@
             </div>
         </div>
     </div>
-    <!-- /.container -->
+    <!-- /.container-fluid -->
 
 
     <!-- Bootstrap core JavaScript

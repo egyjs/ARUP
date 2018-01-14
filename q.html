@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="">
+
+    <title>Search</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <style type="text/css">
+        .starter-template {
+            padding: 3rem 1.5rem;
+        }
+
+    </style>
+</head>
+
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="/">ARUP</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor02">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <!--
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Memberships</a>
+                </li>
+-->
+            </ul>
+            <form class="form-inline">
+                <input class="form-control mr-sm-2" type="search" id="filter" name="f" autofocus placeholder="Search for a file" aria-label="Search">
+            </form>
+        </div>
+    </nav>
+    <div class="container starter-template">
+        <div class="row">
+            <div class="col-4">
+                <div class="list-group" id="list-tab" role="tablist"></div>
+            </div>
+            <div class="col-8">
+                <div class="tab-content" id="nav-tabContent"> </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    <script>
+        $.urlParam = function(name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            if (results == null) {
+                return null;
+            } else {
+                return decodeURI(results[1]) || 0;
+            }
+        }
+
+
+
+
+        const repo = 'https://api.github.com/repos/';
+        const nameWithOwner = 'el3zahaby/ARUP';
+        const FileUrlWeb = repo + nameWithOwner + '/contents/web';
+        const FileUrlUp = repo + nameWithOwner + '/contents/up';
+        const FileUrlTest = repo + nameWithOwner + '/contents/test';
+
+        var DBFile = $.ajax({
+            type: 'GET',
+            url: FileUrlUp,
+            async: false
+        }).responseJSON;
+
+        function checkURL(url) {
+            return (url.match(/\.(jpeg|jpg|gif|png|ico)$/) != null);
+        }
+
+        function selectText(containerid) {
+            if (document.selection) {
+                var range = document.body.createTextRange();
+                range.moveToElementText(document.getElementById(containerid));
+                range.select();
+            } else if (window.getSelection) {
+                var range = document.createRange();
+                range.selectNode(document.getElementById(containerid));
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+            }
+        }
+
+        function search(arr, s) {
+            var matches = [],
+                i, key;
+
+            for (i = arr.length; i--;)
+                for (key in arr[i])
+                    if (arr[i].hasOwnProperty(key) && arr[i][key].indexOf(s) > -1)
+                        matches.push(arr[i]); // <-- This can be changed to anything
+
+            return matches;
+        }
+
+        function getObjects(obj, key, val) {
+            var newObj = false;
+            $.each(obj, function() {
+                var testObject = this;
+                $.each(testObject, function(k, v) {
+                    //alert(k);
+                    if (val == v && k == key) {
+                        newObj = testObject;
+                    }
+                });
+            });
+
+            return newObj;
+        }
+        $(':input[name=f]').on('focus input', function() {
+            $('.tab-pane,.list-group-item').removeClass('active show');
+            //get value just typed into textbox -- see .toLowerCase()
+            var val = this.value.toLowerCase();
+
+
+            //find all .list-group-item
+            $('#list-tab').find('.list-group-item')
+
+                //find those that should be visible
+                .filter(function() {
+                    return $(this).text().toLowerCase().indexOf(val) > -1;
+                })
+
+                //make them visible
+                .show()
+
+                //now go back and get only the visible ones
+                .end().filter(':visible')
+
+                //filter only those for which typed value 'val' does not match the `data-id` value
+                .filter(function() {
+                    return $(this).text().toLowerCase().indexOf(val) === -1;
+                })
+
+                //fade those out
+                .fadeOut();
+
+
+        });
+
+        $.each(DBFile, function(key, value) {
+            key = key + 1;
+            var Valname = value.name.substring(5, value.name.length);
+            $("#list-tab").append('<a class="list-group-item list-group-item-action" data-toggle="list" href="#list-' + key + '" role="tab" >' + key + ': ' + Valname + '</a>');
+            $("#nav-tabContent").append('<div class="tab-pane fade" id="list-' + key + '" role="tabpanel">' +
+                'File Name: ' + Valname +
+                '<br>' +
+                'ID: ' + value.name.substring(0, 5) +
+                '<div class="form-group row"> <label class="col-sm-2 col-form-label">Direct Link:</label> <div class="col-sm-10"> <input readonly="readonly" class="form-control" onclick="this.select();" type="text" value="' + value.download_url + '"> </div> </div>' +
+                'HTML Code: <code id="selectable' + key + '" onclick="selectText(' + "'selectable" + key + "'" + ')">' + $('<div/>').text('<a href="' + value.name + '" ></a>').html() + '</code>' +
+                (checkURL(value.download_url) == true ? '<br>prev:<br><img class="img-thumbnail"  width="400px" src="'+value.download_url+'" alt="'+Valname+'" >': '')+
+                '</div>');
+        });
+        $(".list-group-item:first,.tab-pane:first").addClass(" show active");
+
+
+
+
+        var theNfile = getObjects(DBFile, "name", $.urlParam('f'));
+
+        console.log(DBFile)
+        console.log($.urlParam('f'))
+
+        if ($.urlParam('f') != 0) {
+            $('#filter').val($.urlParam('f'))
+        }
+
+    </script>
+
+</body>
+
+</html>
