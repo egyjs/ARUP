@@ -139,7 +139,7 @@
                 var reader = new FileReader();
                 reader.onloadend = function() {
                     var base64result = reader.result.substr(reader.result.indexOf(',') + 1);
-                    createfile(input.files[0].name, "uploading a file", base64result)
+                    createfile(input.files[0].name, "uploading a file: "+ input.files[0].name, base64result)
                 }
                 reader.onprogress = function(data) {
                     if (data.lengthComputable) {
